@@ -19,19 +19,36 @@ class MainController: UIViewController {
         view.addSubview(mapView)
         mapView.fillSuperview()
         
-        mapView.mapType = .hybridFlyover
-        
-        /*
-        // enable auto layout
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        
-        mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        */
+        setupRegionForMap()
     }
 
+    fileprivate func setupRegionForMap() {
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+}
 
+// SwiftUI Preview
+import SwiftUI
+
+struct MainPreview: PreviewProvider {
+    static var previews: some View {
+//        Text("Main Preview HERE")
+        ContainerView()
+            .edgesIgnoringSafeArea(.all)
+    }
+    
+    struct ContainerView: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> MainController {
+            return MainController()
+        }
+        
+        func updateUIViewController(_ uiViewController: MainController, context: Context) {
+        }
+        
+        typealias UIViewControllerType = MainController
+    }
 }
 
