@@ -13,7 +13,7 @@ extension MainController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
         annotationView.canShowCallout = true
-        annotationView.image = #imageLiteral(resourceName: "tourist.png")
+//        annotationView.image = #imageLiteral(resourceName: "tourist.png")
         return annotationView
     }
 }
@@ -30,7 +30,60 @@ class MainController: UIViewController {
         mapView.fillSuperview()
         
         setupRegionForMap()
-        setupAnnotationsForMap()
+//        setupAnnotationsForMap()
+        performLocalSearch()
+    }
+    
+    fileprivate func performLocalSearch() {
+        guard let region = self.region else { return }
+        
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = "airport"
+//        request.region = mapView.region
+        request.region = region
+        
+        let localSearch = MKLocalSearch(request: request)
+        localSearch.start { resp, err in
+            if let err = err {
+                print("Failed local search:", err)
+                return
+            }
+            
+            // Success
+            resp?.mapItems.forEach({ mapItem in
+//                print(mapItem.name ?? "")
+//                print(mapItem.placemark.subThoroughfare ?? "")
+                
+                let placemark = mapItem.placemark
+                var addressString = ""
+                if placemark.subThoroughfare != nil {
+                    addressString = placemark.subThoroughfare! + " "
+                }
+                if placemark.thoroughfare != nil {
+                    addressString += placemark.thoroughfare! + ", "
+                }
+                if placemark.postalCode != nil {
+                    addressString += placemark.postalCode! + " "
+                }
+                if placemark.locality != nil {
+                    addressString += placemark.locality! + ", "
+                }
+                if placemark.administrativeArea != nil {
+                    addressString += placemark.administrativeArea! + " "
+                }
+                if placemark.country != nil {
+                    addressString += placemark.country!
+                }
+//                print(addressString)
+                print((mapItem.name ?? "") + "\n" + addressString + "\n")
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = mapItem.placemark.coordinate
+                annotation.title = mapItem.name
+                self.mapView.addAnnotation(annotation)
+            })
+            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+        }
     }
     
     fileprivate func setupAnnotationsForMap() {
@@ -48,11 +101,14 @@ class MainController: UIViewController {
         
         mapView.showAnnotations(self.mapView.annotations, animated: true)
     }
+    
+    fileprivate var region: MKCoordinateRegion?
 
     fileprivate func setupRegionForMap() {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: centerCoordinate, span: span)
+        self.region = region
         mapView.setRegion(region, animated: true)
     }
 }
