@@ -34,6 +34,15 @@ class MainController: UIViewController {
 //        setupAnnotationsForMap()
         performLocalSearch()
         setupSearchUI()
+        setupLocationCarousel()
+    }
+    
+    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
+    
+    fileprivate func setupLocationCarousel() {
+        let locationView = locationsController.view!
+        view.addSubview(locationView)
+        locationView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, size: CGSizeMake(0, 150))
     }
     
     let searchTextField = UITextField(placeholder: "Search query")
@@ -57,7 +66,6 @@ class MainController: UIViewController {
             .publisher(for: UITextField.textDidChangeNotification, object: searchTextField)
             .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { _ in
-                print(123123123)
                 self.performLocalSearch()
             }
     }
@@ -121,31 +129,6 @@ class MainController: UIViewController {
         let region = MKCoordinateRegion(center: centerCoordinate, span: span)
         self.region = region
         mapView.setRegion(region, animated: true)
-    }
-}
-
-extension MKMapItem {
-    func address() -> String {
-        var addressString = ""
-        if placemark.subThoroughfare != nil {
-            addressString = placemark.subThoroughfare! + " "
-        }
-        if placemark.thoroughfare != nil {
-            addressString += placemark.thoroughfare! + ", "
-        }
-        if placemark.postalCode != nil {
-            addressString += placemark.postalCode! + " "
-        }
-        if placemark.locality != nil {
-            addressString += placemark.locality! + ", "
-        }
-        if placemark.administrativeArea != nil {
-            addressString += placemark.administrativeArea! + " "
-        }
-        if placemark.country != nil {
-            addressString += placemark.country!
-        }
-        return addressString
     }
 }
 

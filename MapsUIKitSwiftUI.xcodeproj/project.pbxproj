@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */; };
+		D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */; };
 		D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */; };
 		D88EB5DF2A2B4E5C009CC5E9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5DE2A2B4E5C009CC5E9 /* SceneDelegate.swift */; };
 		D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5E02A2B4E5C009CC5E9 /* MainController.swift */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
+		D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
 		D88EB5D92A2B4E5C009CC5E9 /* MapsUIKitSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsUIKitSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D88EB5DE2A2B4E5C009CC5E9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +77,8 @@
 			isa = PBXGroup;
 			children = (
 				D88EB5E02A2B4E5C009CC5E9 /* MainController.swift */,
+				D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */,
+				D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -154,8 +160,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */,
 				D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */,
 				D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */,
+				D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */,
 				D88EB5DF2A2B4E5C009CC5E9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
