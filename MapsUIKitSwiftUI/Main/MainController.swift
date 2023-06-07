@@ -35,6 +35,7 @@ class MainController: UIViewController {
         performLocalSearch()
         setupSearchUI()
         setupLocationCarousel()
+        locationsController.mainController = self
     }
     
     let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
@@ -92,6 +93,7 @@ class MainController: UIViewController {
             // Success
             // remove old annotations
             self.mapView.removeAnnotations(self.mapView.annotations)
+            self.locationsController.items.removeAll()
             
             resp?.mapItems.forEach({ mapItem in
                 print(mapItem.address())
@@ -100,7 +102,15 @@ class MainController: UIViewController {
                 annotation.coordinate = mapItem.placemark.coordinate
                 annotation.title = mapItem.name
                 self.mapView.addAnnotation(annotation)
+                
+                // tell the locationCarouselController
+                self.locationsController.items.append(mapItem)
             })
+            
+            /* error occurs:
+            self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
+            */
+            
             self.mapView.showAnnotations(self.mapView.annotations, animated: true)
         }
     }
