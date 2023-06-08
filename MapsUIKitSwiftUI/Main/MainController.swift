@@ -12,21 +12,52 @@ import Combine
 
 extension MainController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
-        annotationView.canShowCallout = true
-//        annotationView.image = #imageLiteral(resourceName: "tourist.png")
-        return annotationView
+        if (annotation is MKPointAnnotation) {
+            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            annotationView.canShowCallout = true
+            //        annotationView.image = #imageLiteral(resourceName: "tourist.png")
+            return annotationView
+        }
+        return nil
     }
 }
 
-class MainController: UIViewController {
+class MainController: UIViewController, CLLocationManagerDelegate {
     
     let mapView = MKMapView()
+    
+    let locationManager = CLLocationManager()
+
+    fileprivate func requestUserLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedWhenInUse:
+            print("Received authorization of user location")
+            // request for where the user actually is
+            locationManager.startUpdatingLocation()
+        default:
+            print("Failed to authorize")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+        mapView.setRegion(MKCoordinateRegion(center: firstLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+        
+        locationManager.stopUpdatingLocation() // for saving iPhone's GPS power
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        requestUserLocation()
+        
         mapView.delegate = self
+        mapView.showsUserLocation = true
         view.addSubview(mapView)
         mapView.fillSuperview()
         
