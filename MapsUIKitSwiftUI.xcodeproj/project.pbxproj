@@ -29,6 +29,10 @@
 		D88EB5E52A2B4E5D009CC5E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D88EB5E82A2B4E5D009CC5E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D88EB5EA2A2B4E5D009CC5E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8954A442A335B4200A89C90 /* Seoul.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Seoul.gpx; sourceTree = "<group>"; };
+		D8954A452A335BC100A89C90 /* Beijing.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Beijing.gpx; sourceTree = "<group>"; };
+		D8954A462A335BD700A89C90 /* Shanghai.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Shanghai.gpx; sourceTree = "<group>"; };
+		D8954A472A335BEB00A89C90 /* Miami_Florida.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Miami_Florida.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +50,10 @@
 		D88EB5D02A2B4E5C009CC5E9 = {
 			isa = PBXGroup;
 			children = (
+				D8954A472A335BEB00A89C90 /* Miami_Florida.gpx */,
+				D8954A462A335BD700A89C90 /* Shanghai.gpx */,
+				D8954A452A335BC100A89C90 /* Beijing.gpx */,
+				D8954A442A335B4200A89C90 /* Seoul.gpx */,
 				D88EB5DB2A2B4E5C009CC5E9 /* MapsUIKitSwiftUI */,
 				D88EB5DA2A2B4E5C009CC5E9 /* Products */,
 			);

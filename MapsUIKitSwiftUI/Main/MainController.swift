@@ -46,9 +46,14 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let firstLocation = locations.first else { return }
-        mapView.setRegion(MKCoordinateRegion(center: firstLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+//        mapView.setRegion(MKCoordinateRegion(center: firstLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+        let centerCoordinate = firstLocation.coordinate
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
+        self.region = region
+        mapView.setRegion(region, animated: false)
         
-        locationManager.stopUpdatingLocation() // for saving iPhone's GPS power
+//        locationManager.stopUpdatingLocation() // for saving iPhone's GPS power
     }
 
     override func viewDidLoad() {
@@ -106,6 +111,20 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         performLocalSearch()
     }
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let customAnnotation = view.annotation as? CustomMapItemAnnotation else { return }
+        
+//        guard let index = self.locationsController.items.firstIndex(where: { $0.name == view.annotation?.title }) else { return }
+        guard let index = self.locationsController.items.firstIndex(where: { $0.name == customAnnotation.mapItem?.name }) else { return }
+        
+        
+        self.locationsController.collectionView.scrollToItem(at: [0, index], at: .centeredHorizontally, animated: true)
+    }
+    
+    class CustomMapItemAnnotation: MKPointAnnotation {
+        var mapItem: MKMapItem?
+    }
+    
     fileprivate func performLocalSearch() {
         guard let region = self.region else { return }
         
@@ -129,17 +148,25 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             resp?.mapItems.forEach({ mapItem in
                 print(mapItem.address())
                 
-                let annotation = MKPointAnnotation()
+//                let annotation = MKPointAnnotation()
+                let annotation = CustomMapItemAnnotation()
+                annotation.mapItem = mapItem
                 annotation.coordinate = mapItem.placemark.coordinate
-                annotation.title = mapItem.name
+//                annotation.title = mapItem.name
+                annotation.title = "Location: " + (mapItem.name ?? "")
                 self.mapView.addAnnotation(annotation)
                 
                 // tell the locationCarouselController
                 self.locationsController.items.append(mapItem)
             })
             
-            /* error occurs:
+            /* error occurs #1:
             self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
+            */
+            /* error occurs #2:
+            if resp?.mapItems.count != 0 {
+                self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
+            }
             */
             
             self.mapView.showAnnotations(self.mapView.annotations, animated: true)
