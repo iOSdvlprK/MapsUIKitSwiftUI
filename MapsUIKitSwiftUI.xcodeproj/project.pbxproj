@@ -16,6 +16,7 @@
 		D88EB5E62A2B4E5D009CC5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D88EB5E52A2B4E5D009CC5E9 /* Assets.xcassets */; };
 		D88EB5E92A2B4E5D009CC5E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D88EB5E72A2B4E5D009CC5E9 /* LaunchScreen.storyboard */; };
 		D88EB5F32A2B56D0009CC5E9 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D88EB5F22A2B56D0009CC5E9 /* LBTATools */; };
+		D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A492A3469DE00A89C90 /* DirectionsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		D8954A452A335BC100A89C90 /* Beijing.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Beijing.gpx; sourceTree = "<group>"; };
 		D8954A462A335BD700A89C90 /* Shanghai.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Shanghai.gpx; sourceTree = "<group>"; };
 		D8954A472A335BEB00A89C90 /* Miami_Florida.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Miami_Florida.gpx; sourceTree = "<group>"; };
+		D8954A492A3469DE00A89C90 /* DirectionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		D88EB5DB2A2B4E5C009CC5E9 /* MapsUIKitSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				D8954A482A3469B100A89C90 /* Directions */,
 				D88EB5F02A2B52F0009CC5E9 /* Main */,
 				D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */,
 				D88EB5DE2A2B4E5C009CC5E9 /* SceneDelegate.swift */,
@@ -89,6 +92,14 @@
 				D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		D8954A482A3469B100A89C90 /* Directions */ = {
+			isa = PBXGroup;
+			children = (
+				D8954A492A3469DE00A89C90 /* DirectionsController.swift */,
+			);
+			path = Directions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,6 +182,7 @@
 				D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */,
 				D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */,
 				D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */,
+				D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */,
 				D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */,
 				D88EB5DF2A2B4E5C009CC5E9 /* SceneDelegate.swift in Sources */,
 			);

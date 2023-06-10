@@ -93,12 +93,6 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         
         whiteContainer.stack(searchTextField).withMargins(UIEdgeInsets.allSides(16))
         
-        // listen for text changes and then perform new search
-        // OLD style
-//        searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
-        
-        // NEW STYLE - Search Throttling
-        // search on the last keystroke of text changes and basically wait 500 milliseconds
         cancellable = NotificationCenter.default
             .publisher(for: UITextField.textDidChangeNotification, object: searchTextField)
             .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
@@ -114,7 +108,6 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let customAnnotation = view.annotation as? CustomMapItemAnnotation else { return }
         
-//        guard let index = self.locationsController.items.firstIndex(where: { $0.name == view.annotation?.title }) else { return }
         guard let index = self.locationsController.items.firstIndex(where: { $0.name == customAnnotation.mapItem?.name }) else { return }
         
         
