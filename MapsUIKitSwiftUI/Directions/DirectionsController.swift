@@ -10,13 +10,14 @@ import LBTATools
 import MapKit
 import SwiftUI
 
-class DirectionsController: UIViewController {
+class DirectionsController: UIViewController, MKMapViewDelegate {
     
     let mapView = MKMapView()
     let navBar = UIView(backgroundColor: #colorLiteral(red: 0.115295358, green: 0.5173764825, blue: 0.9352841377, alpha: 1))
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.delegate = self
         view.addSubview(mapView)
         
         setupRegionForMap()
@@ -26,6 +27,8 @@ class DirectionsController: UIViewController {
         
         mapView.showsUserLocation = true
         setupStartEndDummyAnnotations()
+        
+        requestForDirections()
     }
     
     fileprivate func setupStartEndDummyAnnotations() {
@@ -41,6 +44,46 @@ class DirectionsController: UIViewController {
         mapView.addAnnotation(endAnnotation)
         
         mapView.showAnnotations(mapView.annotations, animated: true)
+    }
+    
+    fileprivate func requestForDirections() {
+        let request = MKDirections.Request()
+        
+        let startingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290))
+        request.source = MKMapItem(placemark: startingPlacemark)
+        
+        let endingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.331352, longitude: -122.030331))
+        request.destination = MKMapItem(placemark: endingPlacemark)
+        
+//        request.transportType = .walking
+        request.requestsAlternateRoutes = true
+        
+        let directions = MKDirections(request: request)
+        directions.calculate { resp, err in
+            if let err = err {
+                print("Failed to find routing info:", err)
+                return
+            }
+            
+            // success
+            print("Found the directions/routing...")
+//            guard let route = resp?.routes.first else { return }
+//
+//            print(route.expectedTravelTime / 60 / 60)
+            
+//            self.mapView.addOverlay(route.polyline)
+            
+            resp?.routes.forEach({ route in
+                self.mapView.addOverlay(route.polyline)
+            })
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let polylineRenderer = MKPolylineRenderer(overlay: overlay)
+        polylineRenderer.strokeColor = #colorLiteral(red: 0.115295358, green: 0.5173764825, blue: 0.9352841377, alpha: 1)
+        polylineRenderer.lineWidth = 5
+        return polylineRenderer
     }
     
     fileprivate func setupNavBarUI() {
