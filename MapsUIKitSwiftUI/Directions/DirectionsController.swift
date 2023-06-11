@@ -86,10 +86,58 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
         return polylineRenderer
     }
     
+    let startTextField = IndentedTextField(padding: 12, cornerRadius: 5)
+    let endTextField = IndentedTextField(padding: 12, cornerRadius: 5)
+    
     fileprivate func setupNavBarUI() {
         view.addSubview(navBar)
         navBar.setupShadow(opacity: 0.5, radius: 5)
-        navBar.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: 0, left: 0, bottom: -100, right: 0))
+        navBar.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: 0, left: 0, bottom: -120, right: 0))
+        
+        startTextField.attributedPlaceholder = NSAttributedString(string: "Start", attributes: [.foregroundColor: UIColor(white: 1, alpha: 0.5)])
+        endTextField.attributedPlaceholder = NSAttributedString(string: "End", attributes: [.foregroundColor: UIColor(white: 1, alpha: 0.5)])
+        [startTextField, endTextField].forEach { tf in
+            tf.backgroundColor = UIColor(white: 1, alpha: 0.3)
+            tf.textColor = .white
+        }
+        
+        let containerView = UIView(backgroundColor: .clear)
+        navBar.addSubview(containerView)
+        containerView.fillSuperviewSafeAreaLayoutGuide()
+        
+        let startIcon = UIImageView(image: UIImage(named: "start_location_circles"), contentMode: .scaleAspectFit)
+        startIcon.constrainWidth(20)
+        
+        let endIcon = UIImageView(image: UIImage(named: "annotation_icon")?.withRenderingMode(.alwaysTemplate), contentMode: .scaleAspectFit)
+        endIcon.constrainWidth(20)
+        endIcon.tintColor = .white
+        
+        containerView.stack(
+            containerView.hstack(startIcon, startTextField, spacing: 16),
+            containerView.hstack(endIcon, endTextField, spacing: 16),
+            spacing: 12,
+            distribution: .fillEqually
+        ).withMargins(UIEdgeInsets(top: 0, left: 16, bottom: 12, right: 16))
+        
+        startTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeStartLocation)))
+        
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    @objc fileprivate func handleChangeStartLocation() {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemYellow
+        
+        // temp hack for back swiping
+        let button = UIButton(title: "BACK", titleColor: .black, font: .boldSystemFont(ofSize: 14), backgroundColor: .clear, target: self, action: #selector(handleBack))
+        vc.view.addSubview(button)
+        button.fillSuperview()
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc fileprivate func handleBack() {
+        navigationController?.popViewController(animated: true)
     }
     
     fileprivate var region: MKCoordinateRegion?
@@ -112,7 +160,7 @@ struct DirectionsPreview: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> some UIViewController {
-            return DirectionsController()
+            return UINavigationController(rootViewController: DirectionsController())
         }
         
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
