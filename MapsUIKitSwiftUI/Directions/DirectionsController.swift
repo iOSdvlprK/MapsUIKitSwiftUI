@@ -121,17 +121,27 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
         
         startTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeStartLocation)))
         
+        endTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeEndLocation)))
+        
         navigationController?.navigationBar.isHidden = true
     }
     
     @objc fileprivate func handleChangeStartLocation() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemYellow
+        let vc = LocationSearchController()
+        vc.selectionHandler = { [weak self] mapItem in
+//            print(mapItem.name)
+            self?.startTextField.text = mapItem.name
+        }
         
-        // temp hack for back swiping
-        let button = UIButton(title: "BACK", titleColor: .black, font: .boldSystemFont(ofSize: 14), backgroundColor: .clear, target: self, action: #selector(handleBack))
-        vc.view.addSubview(button)
-        button.fillSuperview()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc fileprivate func handleChangeEndLocation() {
+        let vc = LocationSearchController()
+        vc.selectionHandler = { [weak self] mapItem in
+//            print(mapItem.name)
+            self?.endTextField.text = mapItem.name
+        }
         
         navigationController?.pushViewController(vc, animated: true)
     }
