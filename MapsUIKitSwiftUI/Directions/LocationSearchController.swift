@@ -48,6 +48,8 @@ class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem
         super.viewDidLoad()
 //        self.items = ["1", "2"]
         
+        searchTextField.becomeFirstResponder()
+        
         performLocalSearch()
         setupSearchBar()
     }

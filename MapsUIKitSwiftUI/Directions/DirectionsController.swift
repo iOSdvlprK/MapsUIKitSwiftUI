@@ -9,6 +9,7 @@ import UIKit
 import LBTATools
 import MapKit
 import SwiftUI
+import JGProgressHUD
 
 class DirectionsController: UIViewController, MKMapViewDelegate {
     
@@ -25,10 +26,10 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
         setupNavBarUI()
         mapView.anchor(top: navBar.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         
-        mapView.showsUserLocation = true
-        setupStartEndDummyAnnotations()
+//        mapView.showsUserLocation = true
         
-        requestForDirections()
+//        setupStartEndDummyAnnotations()
+//        requestForDirections()
     }
     
     fileprivate func setupStartEndDummyAnnotations() {
@@ -49,17 +50,25 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
     fileprivate func requestForDirections() {
         let request = MKDirections.Request()
         
-        let startingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290))
-        request.source = MKMapItem(placemark: startingPlacemark)
+//        let startingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290))
+//        request.source = MKMapItem(placemark: startingPlacemark)
+        request.source = startMapItem
         
-        let endingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.331352, longitude: -122.030331))
-        request.destination = MKMapItem(placemark: endingPlacemark)
+//        let endingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.331352, longitude: -122.030331))
+//        request.destination = MKMapItem(placemark: endingPlacemark)
+        request.destination = endMapItem
         
 //        request.transportType = .walking
-        request.requestsAlternateRoutes = true
+//        request.requestsAlternateRoutes = true
+        
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Routing..."
+        hud.show(in: view)
         
         let directions = MKDirections(request: request)
         directions.calculate { resp, err in
+            hud.dismiss()
+            
             if let err = err {
                 print("Failed to find routing info:", err)
                 return
@@ -126,21 +135,54 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
         navigationController?.navigationBar.isHidden = true
     }
     
+    var startMapItem: MKMapItem?
+    var endMapItem: MKMapItem?
+    
     @objc fileprivate func handleChangeStartLocation() {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
-//            print(mapItem.name)
             self?.startTextField.text = mapItem.name
+            
+            // add starting annotation and also show it in the map
+            self?.startMapItem = mapItem
+            self?.refreshMap()
         }
         
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    fileprivate func refreshMap() {
+        // remove everything from map
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.removeOverlays(mapView.overlays)
+        
+        if let mapItem = startMapItem {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = mapItem.placemark.coordinate
+            annotation.title = mapItem.name
+            mapView.addAnnotation(annotation)
+        }
+        
+        if let mapItem = endMapItem {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = mapItem.placemark.coordinate
+            annotation.title = mapItem.name
+            mapView.addAnnotation(annotation)
+        }
+        
+        requestForDirections()
+        
+        mapView.showAnnotations(mapView.annotations, animated: false)
+    }
+    
     @objc fileprivate func handleChangeEndLocation() {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
-//            print(mapItem.name)
             self?.endTextField.text = mapItem.name
+            
+            // add ending annotation and also show it in the map
+            self?.endMapItem = mapItem
+            self?.refreshMap()
         }
         
         navigationController?.pushViewController(vc, animated: true)

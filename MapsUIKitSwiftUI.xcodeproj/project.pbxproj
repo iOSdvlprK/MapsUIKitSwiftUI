@@ -18,6 +18,7 @@
 		D88EB5F32A2B56D0009CC5E9 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D88EB5F22A2B56D0009CC5E9 /* LBTATools */; };
 		D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A492A3469DE00A89C90 /* DirectionsController.swift */; };
 		D8954A4C2A35E93000A89C90 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A4B2A35E93000A89C90 /* LocationSearchController.swift */; };
+		D8954A4F2A375AD200A89C90 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D8954A4E2A375AD200A89C90 /* JGProgressHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8954A4F2A375AD200A89C90 /* JGProgressHUD in Frameworks */,
 				D88EB5F32A2B56D0009CC5E9 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,6 +125,7 @@
 			name = MapsUIKitSwiftUI;
 			packageProductDependencies = (
 				D88EB5F22A2B56D0009CC5E9 /* LBTATools */,
+				D8954A4E2A375AD200A89C90 /* JGProgressHUD */,
 			);
 			productName = MapsUIKitSwiftUI;
 			productReference = D88EB5D92A2B4E5C009CC5E9 /* MapsUIKitSwiftUI.app */;
@@ -154,6 +157,7 @@
 			mainGroup = D88EB5D02A2B4E5C009CC5E9;
 			packageReferences = (
 				D88EB5F12A2B56D0009CC5E9 /* XCRemoteSwiftPackageReference "LBTATools" */,
+				D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = D88EB5DA2A2B4E5C009CC5E9 /* Products */;
 			projectDirPath = "";
@@ -416,6 +420,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -423,6 +435,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D88EB5F12A2B56D0009CC5E9 /* XCRemoteSwiftPackageReference "LBTATools" */;
 			productName = LBTATools;
+		};
+		D8954A4E2A375AD200A89C90 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
