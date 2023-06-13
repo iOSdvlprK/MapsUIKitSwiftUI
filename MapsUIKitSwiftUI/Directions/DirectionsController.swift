@@ -30,6 +30,57 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
         
 //        setupStartEndDummyAnnotations()
 //        requestForDirections()
+        
+        setupShowRouteButton()
+    }
+    
+    fileprivate func setupShowRouteButton() {
+        let showRouteButton = UIButton(title: "Show Route", titleColor: .black, font: .boldSystemFont(ofSize: 16), backgroundColor: .white, target: self, action: #selector(handleShowRoute))
+        
+        view.addSubview(showRouteButton)
+        showRouteButton.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .allSides(16), size: CGSize(width: 0, height: 50))
+    }
+    
+    @objc fileprivate func handleShowRoute() {
+        let routesController = RoutesController()
+//        routesController.items = self.currentlyShowingRoute?.steps ?? []
+        routesController.items = self.currentlyShowingRoute?.steps.filter {!$0.instructions.isEmpty} ?? []
+        present(routesController, animated: true)
+    }
+    
+    class RouteStepCell: LBTAListCell<MKRoute.Step> {
+        override var item: MKRoute.Step! {
+            didSet {
+                nameLabel.text = item.instructions
+//                distanceLabel.text = "\(item.distance) m"
+                distanceLabel.text = String(format: "%.2f m", item.distance)
+//                let milesConversion = item.distance * 0.00062137
+//                distanceLabel.text = String(format: "%.2f mi", milesConversion)
+            }
+        }
+        
+        let nameLabel = UILabel(text: "Name", numberOfLines: 0)
+        let distanceLabel = UILabel(text: "Distance", textAlignment: .right)
+        
+        override func setupViews() {
+            hstack(
+                nameLabel,
+                distanceLabel.withWidth(80)
+            ).withMargins(.allSides(16))
+            
+            addSeparatorView(leadingAnchor: nameLabel.leadingAnchor)
+        }
+    }
+    
+    class RoutesController: LBTAListController<RouteStepCell, MKRoute.Step>, UICollectionViewDelegateFlowLayout {
+        override func viewDidLoad() {
+            super.viewDidLoad()
+//            self.items = ["1", "2"]
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            CGSize(width: view.frame.width, height: 70)
+        }
     }
     
     fileprivate func setupStartEndDummyAnnotations() {
@@ -49,17 +100,8 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
     
     fileprivate func requestForDirections() {
         let request = MKDirections.Request()
-        
-//        let startingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290))
-//        request.source = MKMapItem(placemark: startingPlacemark)
         request.source = startMapItem
-        
-//        let endingPlacemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.331352, longitude: -122.030331))
-//        request.destination = MKMapItem(placemark: endingPlacemark)
         request.destination = endMapItem
-        
-//        request.transportType = .walking
-//        request.requestsAlternateRoutes = true
         
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Routing..."
@@ -76,17 +118,19 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
             
             // success
             print("Found the directions/routing...")
-//            guard let route = resp?.routes.first else { return }
-//
-//            print(route.expectedTravelTime / 60 / 60)
+//            resp?.routes.forEach({ route in
+//                self.mapView.addOverlay(route.polyline)
+//            })
             
-//            self.mapView.addOverlay(route.polyline)
+            if let firstRoute = resp?.routes.first {
+                self.mapView.addOverlay(firstRoute.polyline)
+            }
             
-            resp?.routes.forEach({ route in
-                self.mapView.addOverlay(route.polyline)
-            })
+            self.currentlyShowingRoute = resp?.routes.first
         }
     }
+    
+    var currentlyShowingRoute: MKRoute?
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let polylineRenderer = MKPolylineRenderer(overlay: overlay)
