@@ -19,6 +19,8 @@
 		D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A492A3469DE00A89C90 /* DirectionsController.swift */; };
 		D8954A4C2A35E93000A89C90 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A4B2A35E93000A89C90 /* LocationSearchController.swift */; };
 		D8954A4F2A375AD200A89C90 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D8954A4E2A375AD200A89C90 /* JGProgressHUD */; };
+		D8954A512A39F5E700A89C90 /* RouteHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A502A39F5E600A89C90 /* RouteHeader.swift */; };
+		D8954A532A3A061100A89C90 /* RoutesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A522A3A061100A89C90 /* RoutesController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		D8954A472A335BEB00A89C90 /* Miami_Florida.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Miami_Florida.gpx; sourceTree = "<group>"; };
 		D8954A492A3469DE00A89C90 /* DirectionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 		D8954A4B2A35E93000A89C90 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
+		D8954A502A39F5E600A89C90 /* RouteHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteHeader.swift; sourceTree = "<group>"; };
+		D8954A522A3A061100A89C90 /* RoutesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 			isa = PBXGroup;
 			children = (
 				D8954A492A3469DE00A89C90 /* DirectionsController.swift */,
+				D8954A522A3A061100A89C90 /* RoutesController.swift */,
+				D8954A502A39F5E600A89C90 /* RouteHeader.swift */,
 				D8954A4B2A35E93000A89C90 /* LocationSearchController.swift */,
 			);
 			path = Directions;
@@ -190,9 +196,11 @@
 				D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */,
 				D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */,
 				D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */,
+				D8954A512A39F5E700A89C90 /* RouteHeader.swift in Sources */,
 				D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */,
 				D88EB5DF2A2B4E5C009CC5E9 /* SceneDelegate.swift in Sources */,
 				D8954A4C2A35E93000A89C90 /* LocationSearchController.swift in Sources */,
+				D8954A532A3A061100A89C90 /* RoutesController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

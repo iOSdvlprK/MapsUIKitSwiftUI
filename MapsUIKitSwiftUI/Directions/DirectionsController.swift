@@ -43,44 +43,11 @@ class DirectionsController: UIViewController, MKMapViewDelegate {
     
     @objc fileprivate func handleShowRoute() {
         let routesController = RoutesController()
+        routesController.route = currentlyShowingRoute
+        
 //        routesController.items = self.currentlyShowingRoute?.steps ?? []
         routesController.items = self.currentlyShowingRoute?.steps.filter {!$0.instructions.isEmpty} ?? []
         present(routesController, animated: true)
-    }
-    
-    class RouteStepCell: LBTAListCell<MKRoute.Step> {
-        override var item: MKRoute.Step! {
-            didSet {
-                nameLabel.text = item.instructions
-//                distanceLabel.text = "\(item.distance) m"
-                distanceLabel.text = String(format: "%.2f m", item.distance)
-//                let milesConversion = item.distance * 0.00062137
-//                distanceLabel.text = String(format: "%.2f mi", milesConversion)
-            }
-        }
-        
-        let nameLabel = UILabel(text: "Name", numberOfLines: 0)
-        let distanceLabel = UILabel(text: "Distance", textAlignment: .right)
-        
-        override func setupViews() {
-            hstack(
-                nameLabel,
-                distanceLabel.withWidth(80)
-            ).withMargins(.allSides(16))
-            
-            addSeparatorView(leadingAnchor: nameLabel.leadingAnchor)
-        }
-    }
-    
-    class RoutesController: LBTAListController<RouteStepCell, MKRoute.Step>, UICollectionViewDelegateFlowLayout {
-        override func viewDidLoad() {
-            super.viewDidLoad()
-//            self.items = ["1", "2"]
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            CGSize(width: view.frame.width, height: 70)
-        }
     }
     
     fileprivate func setupStartEndDummyAnnotations() {
