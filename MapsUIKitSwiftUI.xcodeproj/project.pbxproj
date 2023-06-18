@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E2D8176BD9248E040644A0A /* Pods_MapsUIKitSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3BAE57DC791A0A8A112663 /* Pods_MapsUIKitSwiftUI.framework */; };
 		D80324AB2A3DE272004D434E /* SDKAPIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AA2A3DE272004D434E /* SDKAPIKey.swift */; };
+		D80324AD2A3F1816004D434E /* CalloutContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AC2A3F1816004D434E /* CalloutContainer.swift */; };
 		D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */; };
 		D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */; };
 		D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */; };
@@ -31,6 +32,7 @@
 		911DEA92AEACD5E44B756313 /* Pods-MapsUIKitSwiftUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapsUIKitSwiftUI.release.xcconfig"; path = "Target Support Files/Pods-MapsUIKitSwiftUI/Pods-MapsUIKitSwiftUI.release.xcconfig"; sourceTree = "<group>"; };
 		C9F2DCBCEE76A4CE954EC15D /* Pods-MapsUIKitSwiftUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapsUIKitSwiftUI.debug.xcconfig"; path = "Target Support Files/Pods-MapsUIKitSwiftUI/Pods-MapsUIKitSwiftUI.debug.xcconfig"; sourceTree = "<group>"; };
 		D80324AA2A3DE272004D434E /* SDKAPIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SDKAPIKey.swift; path = MapsUIKitSwiftUI/SDKAPIKey.swift; sourceTree = SOURCE_ROOT; };
+		D80324AC2A3F1816004D434E /* CalloutContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutContainer.swift; sourceTree = "<group>"; };
 		D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
 		D88EB5D92A2B4E5C009CC5E9 /* MapsUIKitSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsUIKitSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				D8954A552A3B496200A89C90 /* PlacesController.swift */,
+				D80324AC2A3F1816004D434E /* CalloutContainer.swift */,
 			);
 			path = Places;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D80324AD2A3F1816004D434E /* CalloutContainer.swift in Sources */,
 				D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */,
 				D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */,
 				D80324AB2A3DE272004D434E /* SDKAPIKey.swift in Sources */,
