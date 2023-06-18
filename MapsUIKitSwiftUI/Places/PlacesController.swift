@@ -10,6 +10,7 @@ import LBTATools
 import MapKit
 import GooglePlaces
 import CoreLocation
+import JGProgressHUD
 
 class PlacesController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -37,6 +38,8 @@ class PlacesController: UIViewController, CLLocationManagerDelegate, MKMapViewDe
     let hudContainer = UIView(backgroundColor: .white)
     
     fileprivate func setupSelectedAnnotationHUD() {
+        infoButton.addTarget(self, action: #selector(handleInformation), for: .touchUpInside)
+        
         view.addSubview(hudContainer)
         hudContainer.layer.cornerRadius = 5
         hudContainer.setupShadow(opacity: 0.2, radius: 5, offset: .zero, color: .darkGray)
@@ -54,6 +57,86 @@ class PlacesController: UIViewController, CLLocationManagerDelegate, MKMapViewDe
             ),
             alignment: .center
         ).withMargins(.allSides(16))
+    }
+    
+    @objc fileprivate func handleInformation() {
+//        print(123)
+        
+        guard let placeAnnotation = mapView.selectedAnnotations.first as? PlaceAnnotation else { return }
+        print(placeAnnotation.place.name ?? "")
+        
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Loading photos.."
+        hud.show(in: view)
+        
+        // look up all the photos for a place
+        guard let placeId = placeAnnotation.place.placeID else { return }
+        client.lookUpPhotos(forPlaceID: placeId) { [weak self] list, err in
+            if let err = err {
+                hud.dismiss()
+                print("Failed to get a meta data list of photos:", err)
+                return
+            }
+//            print(list)
+            
+            let dispatchGroup = DispatchGroup()
+            
+            var images = [UIImage]()
+            
+            list?.results.forEach({ photoMetadata in
+                dispatchGroup.enter()
+                
+                self?.client.loadPlacePhoto(photoMetadata) { image, err in
+                    dispatchGroup.leave()
+                    
+                    if let err = err {
+                        hud.dismiss()
+                        print("Failed to get an image:", err)
+                        return
+                    }
+                    
+                    guard let image = image else { return }
+                    images.append(image)
+                }
+            })
+            
+            // mechanism to actually wait until receiving complete data
+            dispatchGroup.notify(queue: .main) {
+                hud.dismiss()
+                let controller = PlacePhotosController()
+                controller.items = images
+//                controller.view.backgroundColor = .systemRed
+                self?.present(UINavigationController(rootViewController: controller), animated: true)
+            }
+        }
+    }
+    
+    class PhotoCell: LBTAListCell<UIImage> {
+        override var item: UIImage! {
+            didSet {
+                imageView.image = item
+            }
+        }
+        
+        let imageView = UIImageView(image: nil, contentMode: .scaleAspectFill)
+        
+        override func setupViews() {
+//            backgroundColor = .systemRed
+            
+            addSubview(imageView)
+            imageView.fillSuperview()
+        }
+    }
+    
+    class PlacePhotosController: LBTAListController<PhotoCell, UIImage>, UICollectionViewDelegateFlowLayout {
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            navigationItem.title = "Photos"
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            CGSize(width: view.frame.width, height: 300)
+        }
     }
     
     let client = GMSPlacesClient()
