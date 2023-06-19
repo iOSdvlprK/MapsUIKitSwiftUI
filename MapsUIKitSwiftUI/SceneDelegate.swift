@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,7 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        window.rootViewController = MainController()
 //        window.rootViewController = DirectionsController()
 //        window.rootViewController = UINavigationController(rootViewController: DirectionsController())
-        window.rootViewController = PlacesController()
+//        window.rootViewController = PlacesController()
+        let mapSearchingView = MapSearchingView()
+        window.rootViewController = UIHostingController(rootView: mapSearchingView)
         window.makeKeyAndVisible()
         self.window = window
     }
