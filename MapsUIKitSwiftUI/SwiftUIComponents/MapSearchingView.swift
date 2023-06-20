@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 var uRegion: MKCoordinateRegion?
 
@@ -30,9 +31,6 @@ struct MapViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-//        if let annotation = annotation {
-//            uiView.addAnnotation(annotation)
-//        }
         uiView.removeAnnotations(uiView.annotations)
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(uiView.annotations, animated: false)
@@ -46,6 +44,23 @@ class MapSearchingViewModel: ObservableObject {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
+    @Published var searchQuery = "" {
+        didSet {
+//            print("Search query changing:", _searchQuery)
+//            performSearch(query: searchQuery)
+        }
+    }
+    
+    var cancellable: AnyCancellable?
+    
+    init() {
+        print("Initializing view model")
+        // combine code
+        cancellable = $searchQuery.debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] searchTerm in
+                self?.performSearch(query: searchTerm)
+            }
+    }
     
     fileprivate func performSearch(query: String) {
         isSearching = true
@@ -69,7 +84,7 @@ class MapSearchingViewModel: ObservableObject {
                 airportAnnotations.append(annotation)
             })
             
-            Thread.sleep(forTimeInterval: 1) // wait 1 sec for showing the text
+//            Thread.sleep(forTimeInterval: 1) // wait 1 sec for showing the text
             self.isSearching = false
             self.annotations = airportAnnotations
         }
@@ -81,6 +96,8 @@ struct MapSearchingView: View {
 //    @State private var annotations = [MKPointAnnotation]()
     @ObservedObject var vm = MapSearchingViewModel()
     
+//    @State private var searchQuery = ""
+    
     var body: some View {
         ZStack(alignment: .top) {
 //            Color.yellow
@@ -89,23 +106,13 @@ struct MapSearchingView: View {
             
             VStack(spacing: 12) {
                 HStack {
-                    Button(action: {
-                        // perform an airport search
-                        vm.performSearch(query: "airports")
-                    }, label: {
-                        Text("Search for airports")
-                            .padding()
-                            .background(Color.white)
-                    })
-                    
-                    Button(action: {
-                        vm.annotations = []
-                    }, label: {
-                        Text("Clear Annotations")
-                            .padding()
-                            .background(Color.white)
-                    })
+                    TextField("Search terms", text: $vm.searchQuery)
+//                        .padding()
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(Color.white)
                 }.shadow(radius: 3)
+                    .padding()
                 
                 if vm.isSearching {
                     Text("Searching...")

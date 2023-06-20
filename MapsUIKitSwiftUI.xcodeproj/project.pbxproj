@@ -11,6 +11,8 @@
 		D80324AB2A3DE272004D434E /* SDKAPIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AA2A3DE272004D434E /* SDKAPIKey.swift */; };
 		D80324AD2A3F1816004D434E /* CalloutContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AC2A3F1816004D434E /* CalloutContainer.swift */; };
 		D80324B02A3F583E004D434E /* MapSearchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AF2A3F583E004D434E /* MapSearchingView.swift */; };
+		D84EC20F2A41C53200B2D2C6 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC20E2A41C53200B2D2C6 /* JGProgressHUD */; };
+		D84EC2122A41C54400B2D2C6 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC2112A41C54400B2D2C6 /* LBTATools */; };
 		D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */; };
 		D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */; };
 		D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */; };
@@ -19,10 +21,8 @@
 		D88EB5E42A2B4E5C009CC5E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D88EB5E22A2B4E5C009CC5E9 /* Main.storyboard */; };
 		D88EB5E62A2B4E5D009CC5E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D88EB5E52A2B4E5D009CC5E9 /* Assets.xcassets */; };
 		D88EB5E92A2B4E5D009CC5E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D88EB5E72A2B4E5D009CC5E9 /* LaunchScreen.storyboard */; };
-		D88EB5F32A2B56D0009CC5E9 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D88EB5F22A2B56D0009CC5E9 /* LBTATools */; };
 		D8954A4A2A3469DE00A89C90 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A492A3469DE00A89C90 /* DirectionsController.swift */; };
 		D8954A4C2A35E93000A89C90 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A4B2A35E93000A89C90 /* LocationSearchController.swift */; };
-		D8954A4F2A375AD200A89C90 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D8954A4E2A375AD200A89C90 /* JGProgressHUD */; };
 		D8954A512A39F5E700A89C90 /* RouteHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A502A39F5E600A89C90 /* RouteHeader.swift */; };
 		D8954A532A3A061100A89C90 /* RoutesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A522A3A061100A89C90 /* RoutesController.swift */; };
 		D8954A562A3B496300A89C90 /* PlacesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8954A552A3B496200A89C90 /* PlacesController.swift */; };
@@ -61,8 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8954A4F2A375AD200A89C90 /* JGProgressHUD in Frameworks */,
-				D88EB5F32A2B56D0009CC5E9 /* LBTATools in Frameworks */,
+				D84EC20F2A41C53200B2D2C6 /* JGProgressHUD in Frameworks */,
+				D84EC2122A41C54400B2D2C6 /* LBTATools in Frameworks */,
 				2E2D8176BD9248E040644A0A /* Pods_MapsUIKitSwiftUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -184,8 +184,8 @@
 			);
 			name = MapsUIKitSwiftUI;
 			packageProductDependencies = (
-				D88EB5F22A2B56D0009CC5E9 /* LBTATools */,
-				D8954A4E2A375AD200A89C90 /* JGProgressHUD */,
+				D84EC20E2A41C53200B2D2C6 /* JGProgressHUD */,
+				D84EC2112A41C54400B2D2C6 /* LBTATools */,
 			);
 			productName = MapsUIKitSwiftUI;
 			productReference = D88EB5D92A2B4E5C009CC5E9 /* MapsUIKitSwiftUI.app */;
@@ -216,8 +216,8 @@
 			);
 			mainGroup = D88EB5D02A2B4E5C009CC5E9;
 			packageReferences = (
-				D88EB5F12A2B56D0009CC5E9 /* XCRemoteSwiftPackageReference "LBTATools" */,
-				D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				D84EC20D2A41C53200B2D2C6 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				D84EC2102A41C54400B2D2C6 /* XCRemoteSwiftPackageReference "LBTATools" */,
 			);
 			productRefGroup = D88EB5DA2A2B4E5C009CC5E9 /* Products */;
 			projectDirPath = "";
@@ -451,6 +451,7 @@
 				DEVELOPMENT_TEAM = Q5CYH8RVUS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MapsUIKitSwiftUI/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want your LOCATION.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -480,6 +481,7 @@
 				DEVELOPMENT_TEAM = Q5CYH8RVUS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MapsUIKitSwiftUI/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want your LOCATION.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -522,15 +524,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D88EB5F12A2B56D0009CC5E9 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+		D84EC20D2A41C53200B2D2C6 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
 			requirement = {
@@ -538,18 +532,26 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		D84EC2102A41C54400B2D2C6 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D88EB5F22A2B56D0009CC5E9 /* LBTATools */ = {
+		D84EC20E2A41C53200B2D2C6 /* JGProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D88EB5F12A2B56D0009CC5E9 /* XCRemoteSwiftPackageReference "LBTATools" */;
-			productName = LBTATools;
-		};
-		D8954A4E2A375AD200A89C90 /* JGProgressHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D8954A4D2A375AD200A89C90 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			package = D84EC20D2A41C53200B2D2C6 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
 			productName = JGProgressHUD;
+		};
+		D84EC2112A41C54400B2D2C6 /* LBTATools */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84EC2102A41C54400B2D2C6 /* XCRemoteSwiftPackageReference "LBTATools" */;
+			productName = LBTATools;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
