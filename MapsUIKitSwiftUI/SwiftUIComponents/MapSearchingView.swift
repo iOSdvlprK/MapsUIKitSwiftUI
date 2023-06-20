@@ -41,38 +41,15 @@ struct MapViewContainer: UIViewRepresentable {
     typealias UIViewType = MKMapView
 }
 
-struct MapSearchingView: View {
+// keep track of properties that view needs to render
+class MapSearchingViewModel: ObservableObject {
     
-    @State private var annotations = [MKPointAnnotation]()
-    
-    var body: some View {
-        ZStack(alignment: .top) {
-//            Color.yellow
-            MapViewContainer(annotations: annotations)
-                .edgesIgnoringSafeArea(.all)
-            
-            HStack {
-                Button(action: {
-                    // perform an airport search
-                    performSearch(query: "airports")
-                }, label: {
-                    Text("Search for airports")
-                        .padding()
-                        .background(Color.white)
-                })
-                
-                Button(action: {
-                    self.annotations = []
-                }, label: {
-                    Text("Clear Annotations")
-                        .padding()
-                        .background(Color.white)
-                })
-            }.shadow(radius: 2)
-        }
-    }
+    @Published var annotations = [MKPointAnnotation]()
+    @Published var isSearching = false
     
     fileprivate func performSearch(query: String) {
+        isSearching = true
+        
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         guard let uRegion = uRegion else { return }
@@ -91,7 +68,51 @@ struct MapSearchingView: View {
                 annotation.coordinate = mapItem.placemark.coordinate
                 airportAnnotations.append(annotation)
             })
-            annotations = airportAnnotations
+            
+            Thread.sleep(forTimeInterval: 1) // wait 1 sec for showing the text
+            self.isSearching = false
+            self.annotations = airportAnnotations
+        }
+    }
+}
+
+struct MapSearchingView: View {
+    
+//    @State private var annotations = [MKPointAnnotation]()
+    @ObservedObject var vm = MapSearchingViewModel()
+    
+    var body: some View {
+        ZStack(alignment: .top) {
+//            Color.yellow
+            MapViewContainer(annotations: vm.annotations)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack(spacing: 12) {
+                HStack {
+                    Button(action: {
+                        // perform an airport search
+                        vm.performSearch(query: "airports")
+                    }, label: {
+                        Text("Search for airports")
+                            .padding()
+                            .background(Color.white)
+                    })
+                    
+                    Button(action: {
+                        vm.annotations = []
+                    }, label: {
+                        Text("Clear Annotations")
+                            .padding()
+                            .background(Color.white)
+                    })
+                }.shadow(radius: 3)
+                
+                if vm.isSearching {
+                    Text("Searching...")
+                }
+            }
+            .padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
+            
         }
     }
 }
