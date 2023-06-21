@@ -12,6 +12,23 @@ import Combine
 var uRegion: MKCoordinateRegion?
 
 struct MapViewContainer: UIViewRepresentable {
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(mapView: mapView)
+    }
+    
+//    class CustomDelegate: NSObject, MKMapViewDelegate {
+    class Coordinator: NSObject, MKMapViewDelegate {
+        init(mapView: MKMapView) {
+            super.init()
+            mapView.delegate = self
+        }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            pinAnnotationView.canShowCallout = true
+            return pinAnnotationView
+        }
+    }
     
     var annotations = [MKPointAnnotation]()
     var selectedMapItem: MKMapItem?
@@ -68,18 +85,6 @@ struct MapViewContainer: UIViewRepresentable {
     // This checks to see whether or not annotations have changed.  The algorithm generates a hashmap/dictionary for all the annotations and then goes through the map to check if they exist. If it doesn't currently exist, we treat this as a need to refresh the map
     fileprivate func shouldRefreshAnnotations(mapView: MKMapView) -> Bool {
         let grouped = Dictionary(grouping: mapView.annotations, by: { $0.title ?? ""})
-//        for (_, annotation) in annotations.enumerated() {
-//            if grouped[annotation.title ?? ""] == nil {
-//                return true
-//            }
-//        }
-        /** emit an error of 'Unexpected non-void return value in void function'
-        annotations.forEach { annotation in
-            if grouped[annotation.title ?? ""] == nil {
-                return true
-            }
-        }
-        */
         for annotation in annotations {
             if grouped[annotation.title ?? ""] == nil {
                 return true
@@ -99,7 +104,6 @@ class MapSearchingViewModel: ObservableObject {
     @Published var searchQuery = ""
     @Published var mapItems = [MKMapItem]()
     @Published var selectedMapItem: MKMapItem?
-//    @Published var keyboardHeight: CGFloat = 0
     
     var cancellable: AnyCancellable?
     
@@ -110,33 +114,7 @@ class MapSearchingViewModel: ObservableObject {
             .sink { [weak self] searchTerm in
                 self?.performSearch(query: searchTerm)
             }
-        
-        /* This code line is not suitable as of iOS 16.1 */
-//        listenForKeyboardNotifications()
     }
-    
-/** This code is not suitable as of iOS 16.1 because the problem is already fixed by Apple.
- *
-    fileprivate func listenForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] notification in
-            guard let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-            let keyboardFrame = value.cgRectValue
-//            let window = UIApplication.shared.windows.filter{$0.isKeyWindow}.first
-            let window = (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window
-            
-            withAnimation(.easeOut(duration: 0.25)) {
-                self?.keyboardHeight = keyboardFrame.height - window!.safeAreaInsets.bottom
-            }
-            print(keyboardFrame.height)
-        }
-        
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { [weak self] notification in
-            withAnimation(.easeOut(duration: 0.25)) {
-                self?.keyboardHeight = 0
-            }
-        }
-    }
-*/
     
     fileprivate func performSearch(query: String) {
         isSearching = true
@@ -171,10 +149,7 @@ class MapSearchingViewModel: ObservableObject {
 
 struct MapSearchingView: View {
     
-//    @State private var annotations = [MKPointAnnotation]()
     @ObservedObject var vm = MapSearchingViewModel()
-    
-//    @State private var searchQuery = ""
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -201,7 +176,6 @@ struct MapSearchingView: View {
                 
                 ScrollView(.horizontal) {
                     HStack(spacing: 16) {
-//                        ForEach(vm.annotations, id: \.self) { item in
                         ForEach(vm.mapItems, id: \.self) { item in
                             
                             Button(action: {
@@ -209,7 +183,6 @@ struct MapSearchingView: View {
                                 self.vm.selectedMapItem = item
                             }, label: {
                                 VStack(alignment: .leading, spacing: 4) {
-    //                                Text(item.title ?? "")
                                     Text(item.name ?? "")
                                         .font(.headline)
                                     Text(item.placemark.title ?? "")
@@ -223,9 +196,6 @@ struct MapSearchingView: View {
                         }
                     }.padding(.horizontal, 16)
                 }.shadow(radius: 5)
-                
-                /* This code line is not suitable as of iOS 16.1 */
-//                Spacer().frame(height: vm.keyboardHeight)
             }.padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
         }
     }
