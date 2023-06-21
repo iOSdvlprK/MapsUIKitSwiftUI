@@ -99,6 +99,7 @@ class MapSearchingViewModel: ObservableObject {
     @Published var searchQuery = ""
     @Published var mapItems = [MKMapItem]()
     @Published var selectedMapItem: MKMapItem?
+//    @Published var keyboardHeight: CGFloat = 0
     
     var cancellable: AnyCancellable?
     
@@ -109,7 +110,33 @@ class MapSearchingViewModel: ObservableObject {
             .sink { [weak self] searchTerm in
                 self?.performSearch(query: searchTerm)
             }
+        
+        /* This code line is not suitable as of iOS 16.1 */
+//        listenForKeyboardNotifications()
     }
+    
+/** This code is not suitable as of iOS 16.1 because the problem is already fixed by Apple.
+ *
+    fileprivate func listenForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] notification in
+            guard let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            let keyboardFrame = value.cgRectValue
+//            let window = UIApplication.shared.windows.filter{$0.isKeyWindow}.first
+            let window = (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window
+            
+            withAnimation(.easeOut(duration: 0.25)) {
+                self?.keyboardHeight = keyboardFrame.height - window!.safeAreaInsets.bottom
+            }
+            print(keyboardFrame.height)
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { [weak self] notification in
+            withAnimation(.easeOut(duration: 0.25)) {
+                self?.keyboardHeight = 0
+            }
+        }
+    }
+*/
     
     fileprivate func performSearch(query: String) {
         isSearching = true
@@ -196,6 +223,9 @@ struct MapSearchingView: View {
                         }
                     }.padding(.horizontal, 16)
                 }.shadow(radius: 5)
+                
+                /* This code line is not suitable as of iOS 16.1 */
+//                Spacer().frame(height: vm.keyboardHeight)
             }.padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
         }
     }
