@@ -14,6 +14,7 @@ var uRegion: MKCoordinateRegion?
 struct MapViewContainer: UIViewRepresentable {
     
     var annotations = [MKPointAnnotation]()
+    var selectedMapItem: MKMapItem?
     
     let mapView = MKMapView()
     
@@ -30,10 +31,61 @@ struct MapViewContainer: UIViewRepresentable {
         mapView.setRegion(region, animated: true)
     }
     
+    /*
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.removeAnnotations(uiView.annotations)
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(uiView.annotations, animated: false)
+        
+        uiView.annotations.forEach { annotation in
+            if annotation.title == selectedMapItem?.name {
+                uiView.selectAnnotation(annotation, animated: true)
+            }
+        }
+    }
+    */
+    
+    // solution to the flashing problem of the map when tapping on one of the carousel buttons
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        if annotations.count == 0 {
+            uiView.removeAnnotations(uiView.annotations)
+            return
+        }
+        
+        if shouldRefreshAnnotations(mapView: uiView) {
+            uiView.removeAnnotations(uiView.annotations)
+            uiView.addAnnotations(annotations)
+            uiView.showAnnotations(uiView.annotations, animated: false)
+        }
+        
+        uiView.annotations.forEach { (annotation) in
+            if annotation.title == selectedMapItem?.name {
+                uiView.selectAnnotation(annotation, animated: true)
+            }
+        }
+    }
+    
+    // This checks to see whether or not annotations have changed.  The algorithm generates a hashmap/dictionary for all the annotations and then goes through the map to check if they exist. If it doesn't currently exist, we treat this as a need to refresh the map
+    fileprivate func shouldRefreshAnnotations(mapView: MKMapView) -> Bool {
+        let grouped = Dictionary(grouping: mapView.annotations, by: { $0.title ?? ""})
+//        for (_, annotation) in annotations.enumerated() {
+//            if grouped[annotation.title ?? ""] == nil {
+//                return true
+//            }
+//        }
+        /** emit an error of 'Unexpected non-void return value in void function'
+        annotations.forEach { annotation in
+            if grouped[annotation.title ?? ""] == nil {
+                return true
+            }
+        }
+        */
+        for annotation in annotations {
+            if grouped[annotation.title ?? ""] == nil {
+                return true
+            }
+        }
+        return false
     }
     
     typealias UIViewType = MKMapView
@@ -44,12 +96,9 @@ class MapSearchingViewModel: ObservableObject {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
-    @Published var searchQuery = "" {
-        didSet {
-//            print("Search query changing:", _searchQuery)
-//            performSearch(query: searchQuery)
-        }
-    }
+    @Published var searchQuery = ""
+    @Published var mapItems = [MKMapItem]()
+    @Published var selectedMapItem: MKMapItem?
     
     var cancellable: AnyCancellable?
     
@@ -73,6 +122,8 @@ class MapSearchingViewModel: ObservableObject {
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { resp, err in
             // handle the error
+            
+            self.mapItems = resp?.mapItems ?? []
             
             var airportAnnotations = [MKPointAnnotation]()
             
@@ -101,7 +152,7 @@ struct MapSearchingView: View {
     var body: some View {
         ZStack(alignment: .top) {
 //            Color.yellow
-            MapViewContainer(annotations: vm.annotations)
+            MapViewContainer(annotations: vm.annotations, selectedMapItem: vm.selectedMapItem)
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 12) {
@@ -111,15 +162,41 @@ struct MapSearchingView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(Color.white)
-                }.shadow(radius: 3)
-                    .padding()
+                }
+                .padding()
+                .shadow(radius: 3)
                 
                 if vm.isSearching {
                     Text("Searching...")
                 }
-            }
-            .padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
-            
+                
+                Spacer()
+                
+                ScrollView(.horizontal) {
+                    HStack(spacing: 16) {
+//                        ForEach(vm.annotations, id: \.self) { item in
+                        ForEach(vm.mapItems, id: \.self) { item in
+                            
+                            Button(action: {
+                                print(item.name ?? "")
+                                self.vm.selectedMapItem = item
+                            }, label: {
+                                VStack(alignment: .leading, spacing: 4) {
+    //                                Text(item.title ?? "")
+                                    Text(item.name ?? "")
+                                        .font(.headline)
+                                    Text(item.placemark.title ?? "")
+                                }
+                            })
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(width: 200)
+                            .background(Color.white)
+                            .cornerRadius(5)
+                        }
+                    }.padding(.horizontal, 16)
+                }.shadow(radius: 5)
+            }.padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
         }
     }
 }
