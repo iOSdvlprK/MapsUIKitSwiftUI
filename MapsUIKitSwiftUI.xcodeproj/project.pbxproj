@@ -13,6 +13,7 @@
 		D80324B02A3F583E004D434E /* MapSearchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AF2A3F583E004D434E /* MapSearchingView.swift */; };
 		D84EC20F2A41C53200B2D2C6 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC20E2A41C53200B2D2C6 /* JGProgressHUD */; };
 		D84EC2122A41C54400B2D2C6 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC2112A41C54400B2D2C6 /* LBTATools */; };
+		D84EC2142A44918600B2D2C6 /* DirectionsSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */; };
 		D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */; };
 		D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */; };
 		D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88EB5DC2A2B4E5C009CC5E9 /* AppDelegate.swift */; };
@@ -35,6 +36,7 @@
 		D80324AA2A3DE272004D434E /* SDKAPIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SDKAPIKey.swift; path = MapsUIKitSwiftUI/SDKAPIKey.swift; sourceTree = SOURCE_ROOT; };
 		D80324AC2A3F1816004D434E /* CalloutContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutContainer.swift; sourceTree = "<group>"; };
 		D80324AF2A3F583E004D434E /* MapSearchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchingView.swift; sourceTree = "<group>"; };
+		D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSearchView.swift; sourceTree = "<group>"; };
 		D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
 		D88EB5D92A2B4E5C009CC5E9 /* MapsUIKitSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsUIKitSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				D80324AF2A3F583E004D434E /* MapSearchingView.swift */,
+				D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */,
 			);
 			path = SwiftUIComponents;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 				D8856BAD2A2EB8740048E86A /* LocationsCarouselController.swift in Sources */,
 				D88EB5DF2A2B4E5C009CC5E9 /* SceneDelegate.swift in Sources */,
 				D8954A562A3B496300A89C90 /* PlacesController.swift in Sources */,
+				D84EC2142A44918600B2D2C6 /* DirectionsSearchView.swift in Sources */,
 				D8954A4C2A35E93000A89C90 /* LocationSearchController.swift in Sources */,
 				D8954A532A3A061100A89C90 /* RoutesController.swift in Sources */,
 				D80324B02A3F583E004D434E /* MapSearchingView.swift in Sources */,
