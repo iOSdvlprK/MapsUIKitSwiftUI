@@ -36,6 +36,13 @@ struct MapViewContainer: UIViewRepresentable {
             pinAnnotationView.canShowCallout = true
             return pinAnnotationView
         }
+        
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+//            print(mapView.region)
+            NotificationCenter.default.post(name: MapViewContainer.Coordinator.regionChangedNotification, object: mapView.region)
+        }
+        
+        static let regionChangedNotification = NSNotification.Name("regionChangedNotification")
     }
     
     func makeUIView(context: Context) -> MKMapView {
@@ -68,11 +75,13 @@ struct MapViewContainer: UIViewRepresentable {
     
     // solution to the flashing problem of the map when tapping on one of the carousel buttons
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        let region = MKCoordinateRegion(center: currentLocation, span: span)
-        uiView.setRegion(region, animated: true)
         
         if annotations.count == 0 {
+            // setting up the map to current location
+            let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            let region = MKCoordinateRegion(center: currentLocation, span: span)
+            uiView.setRegion(region, animated: true)
+            
             uiView.removeAnnotations(uiView.annotations)
             return
         }
@@ -80,7 +89,7 @@ struct MapViewContainer: UIViewRepresentable {
         if shouldRefreshAnnotations(mapView: uiView) {
             uiView.removeAnnotations(uiView.annotations)
             uiView.addAnnotations(annotations)
-            uiView.showAnnotations(uiView.annotations, animated: false)
+            uiView.showAnnotations(uiView.annotations.filter{$0 is MKPointAnnotation}, animated: false)
         }
         
         uiView.annotations.forEach { (annotation) in
@@ -142,7 +151,13 @@ class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         
         locationManager.delegate = self
 //        locationManager.requestWhenInUseAuthorization()   // not necessarily needed
+        
+        NotificationCenter.default.addObserver(forName: MapViewContainer.Coordinator.regionChangedNotification, object: nil, queue: .main) { [weak self] notification in
+            self?.region = notification.object as? MKCoordinateRegion
+        }
     }
+    
+    fileprivate var region: MKCoordinateRegion?
     
     fileprivate func performSearch(query: String) {
         isSearching = true
@@ -151,8 +166,11 @@ class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         request.naturalLanguageQuery = query
 //        guard let uRegion = uRegion else { return }
 //        request.region = uRegion
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        request.region = MKCoordinateRegion(center: currentLocation, span: span)
+//        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+//        request.region = MKCoordinateRegion(center: currentLocation, span: span)
+        if let region = self.region {
+            request.region = region
+        }
         
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { resp, err in
