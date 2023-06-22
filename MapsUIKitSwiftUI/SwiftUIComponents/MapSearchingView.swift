@@ -12,11 +12,17 @@ import Combine
 var uRegion: MKCoordinateRegion?
 
 struct MapViewContainer: UIViewRepresentable {
+    
+    var annotations = [MKPointAnnotation]()
+    var selectedMapItem: MKMapItem?
+    var currentLocation = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
+    
+    let mapView = MKMapView()
+
     func makeCoordinator() -> Coordinator {
         return Coordinator(mapView: mapView)
     }
     
-//    class CustomDelegate: NSObject, MKMapViewDelegate {
     class Coordinator: NSObject, MKMapViewDelegate {
         init(mapView: MKMapView) {
             super.init()
@@ -24,19 +30,17 @@ struct MapViewContainer: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if !(annotation is MKPointAnnotation) { return nil } // displays user's current location in blue point
+            
             let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
             pinAnnotationView.canShowCallout = true
             return pinAnnotationView
         }
     }
     
-    var annotations = [MKPointAnnotation]()
-    var selectedMapItem: MKMapItem?
-    
-    let mapView = MKMapView()
-    
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
+        mapView.showsUserLocation = true
         return mapView
     }
     
@@ -64,6 +68,10 @@ struct MapViewContainer: UIViewRepresentable {
     
     // solution to the flashing problem of the map when tapping on one of the carousel buttons
     func updateUIView(_ uiView: MKMapView, context: Context) {
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: currentLocation, span: span)
+        uiView.setRegion(region, animated: true)
+        
         if annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
             return
@@ -97,23 +105,43 @@ struct MapViewContainer: UIViewRepresentable {
 }
 
 // keep track of properties that view needs to render
-class MapSearchingViewModel: ObservableObject {
+class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
     @Published var searchQuery = ""
     @Published var mapItems = [MKMapItem]()
     @Published var selectedMapItem: MKMapItem?
+    @Published var currentLocation = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
     
     var cancellable: AnyCancellable?
     
-    init() {
+    // figure out the user's location
+    let locationManager = CLLocationManager()
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+//        print(firstLocation)
+        self.currentLocation = firstLocation.coordinate
+    }
+    
+    override init() {
+        super.init()
         print("Initializing view model")
         // combine code
         cancellable = $searchQuery.debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { [weak self] searchTerm in
                 self?.performSearch(query: searchTerm)
             }
+        
+        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization()   // not necessarily needed
     }
     
     fileprivate func performSearch(query: String) {
@@ -121,8 +149,10 @@ class MapSearchingViewModel: ObservableObject {
         
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
-        guard let uRegion = uRegion else { return }
-        request.region = uRegion
+//        guard let uRegion = uRegion else { return }
+//        request.region = uRegion
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        request.region = MKCoordinateRegion(center: currentLocation, span: span)
         
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { resp, err in
@@ -154,7 +184,7 @@ struct MapSearchingView: View {
     var body: some View {
         ZStack(alignment: .top) {
 //            Color.yellow
-            MapViewContainer(annotations: vm.annotations, selectedMapItem: vm.selectedMapItem)
+            MapViewContainer(annotations: vm.annotations, selectedMapItem: vm.selectedMapItem, currentLocation: vm.currentLocation)
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 12) {
