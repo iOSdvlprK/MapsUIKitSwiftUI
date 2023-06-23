@@ -40,23 +40,30 @@ struct DirectionsSearchView: View {
     @State private var isSelectingSource = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack(alignment: .top) {
                 VStack(spacing: 0) {
                     VStack {
                         HStack(spacing: 16) {
                             Image("start_location_circles")
                                 .frame(width: 24)
-                            NavigationLink(destination: SelectLocationView(isShowing: $isSelectingSource), isActive: $isSelectingSource) {
-                                HStack {
+                            HStack {
+//                                Text("Source")
+                                Button(action: {
+                                    isSelectingSource = true
+                                }, label: {
                                     Text("Source")
-                                    Spacer()
-                                }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(3)
+                                })
+                                .foregroundColor(Color.gray)
+                                Spacer()
                             }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(3)
                         }
+                        .navigationDestination(isPresented: $isSelectingSource, destination: {
+                            SelectLocationView(isShowing: $isSelectingSource)
+                        })
                         HStack(spacing: 16) {
                             Image("annotation_icon")
                                 .renderingMode(.template)
