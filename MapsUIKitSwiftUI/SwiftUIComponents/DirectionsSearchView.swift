@@ -21,13 +21,15 @@ struct DirectionsMapView: UIViewRepresentable {
 }
 
 struct SelectLocationView: View {
-    @Binding var isShowing: Bool
+//    @Binding var isShowing: Bool
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
             Button(action: {
                 // need to dismiss this view
-                self.isShowing = false
+//                self.isShowing = false
+                self.presentationMode.wrappedValue.dismiss()
             }, label: {
                 Text("Dismiss")
             })
@@ -61,9 +63,12 @@ struct DirectionsSearchView: View {
                             .background(Color.white)
                             .cornerRadius(3)
                         }
-                        .navigationDestination(isPresented: $isSelectingSource, destination: {
-                            SelectLocationView(isShowing: $isSelectingSource)
-                        })
+//                        .navigationDestination(isPresented: $isSelectingSource, destination: {
+//                            SelectLocationView(isShowing: $isSelectingSource)
+//                        })
+                        .sheet(isPresented: $isSelectingSource) {
+                            SelectLocationView()
+                        }
                         HStack(spacing: 16) {
                             Image("annotation_icon")
                                 .renderingMode(.template)
