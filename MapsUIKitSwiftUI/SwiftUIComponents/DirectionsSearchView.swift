@@ -9,14 +9,51 @@ import SwiftUI
 import MapKit
 
 struct DirectionsMapView: UIViewRepresentable {
+    
+    @EnvironmentObject var env: DirectionsEnvironment
+    
     typealias UIViewType = MKMapView
     
+    let mapView = MKMapView()
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(mapView: mapView)
+    }
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        init(mapView: MKMapView) {
+            super.init()
+            mapView.delegate = self
+        }
+        
+        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            renderer.strokeColor =  .red
+            renderer.lineWidth = 5
+            return renderer
+        }
+    }
+    
     func makeUIView(context: Context) -> MKMapView {
-        MKMapView()
+        mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
+        uiView.removeOverlays(uiView.overlays)
+        uiView.removeAnnotations(uiView.annotations)
         
+        [env.sourceMapItem, env.destinationMapItem]
+            .compactMap{$0}.forEach { mapItem in
+                let annotation = MKPointAnnotation()
+                annotation.title = mapItem.name
+                annotation.coordinate = mapItem.placemark.coordinate
+                uiView.addAnnotation(annotation)
+            }
+        uiView.showAnnotations(uiView.annotations, animated: false)
+        
+        if let route = env.route {
+            uiView.addOverlay(route.polyline)
+        }
     }
 }
 
@@ -162,6 +199,8 @@ struct DirectionsSearchView: View {
     }
 }
 
+import Combine
+
 // treat the env as the brain of the application
 class DirectionsEnvironment: ObservableObject {
     @Published var isSelectingSource = false
@@ -169,6 +208,32 @@ class DirectionsEnvironment: ObservableObject {
     
     @Published var sourceMapItem: MKMapItem?
     @Published var destinationMapItem: MKMapItem?
+    
+    @Published var route: MKRoute?
+    
+    var cancellable: AnyCancellable?
+    
+    init() {
+        // listen for changes on sourceMapItem, destinationMapItem
+        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { items in
+//            print(items.0 ?? "", items.1 ?? "")
+            
+            // searching for directions
+            let request = MKDirections.Request()
+            request.source = items.0
+            request.destination = items.1
+            let directions = MKDirections(request: request)
+            directions.calculate { [weak self] resp, err in
+                if let err = err {
+                    print("Failed to calculate directions:", err)
+                    return
+                }
+                
+//                print(resp?.routes.first ?? "")
+                self?.route = resp?.routes.first
+            }
+        }
+    }
 }
 
 struct DirectionsSearchView_Previews: PreviewProvider {
