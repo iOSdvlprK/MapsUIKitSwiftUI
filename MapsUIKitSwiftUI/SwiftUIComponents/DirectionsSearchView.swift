@@ -121,14 +121,6 @@ struct SelectLocationView: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .onAppear(perform: {
-            // dummy search
-//            let request = MKLocalSearch.Request()
-//            request.naturalLanguageQuery = "Food"
-//            let search = MKLocalSearch(request: request)
-//            search.start { resp, err in
-//                // check the error
-//                self.mapItems = resp?.mapItems ?? []
-//            }
         })
         .navigationTitle("")
         .navigationBarHidden(true)
@@ -145,16 +137,6 @@ struct DirectionsSearchView: View {
                     VStack {
                         SourceMapItemView()
                         DestinationMapItemView()
-                        /*
-                         * A logical error occurs:
-                         *  when the second row('Destination') input is done,
-                         *  the value gets into the first row('Source').
-                         *
-                         * So, the way of using different objects is better here.
-                         *
-                        MapItemView(selectingBool: $env.isSelectingSource, title: env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source", image: "start_location_circles")
-                        MapItemView(selectingBool: $env.isSelectingDestination, title: env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination", image: "annotation_icon")
-                        */
                     }
                     .padding()
                     .background(Color.blue)
@@ -162,42 +144,40 @@ struct DirectionsSearchView: View {
                     DirectionsMapView()
                         .edgesIgnoringSafeArea(.bottom)
                 }
+                
+                if env.isCalculatingDirections {
+                    VStack {
+                        Spacer()
+                        VStack {
+                            LoadingHUD()
+                            Text("Loading...")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .background(Color.black)
+                        .cornerRadius(5)
+                        
+                        Spacer()
+                    }
+                }
             }
-//            .navigationBarTitle("DIRECTIONS")
-//            .navigationBarHidden(true)
         }
     }
 }
 
-struct MapItemView: View {
-    @EnvironmentObject var env: DirectionsEnvironment
+struct LoadingHUD: UIViewRepresentable {
+    typealias UIViewType = UIActivityIndicatorView
     
-    @Binding var selectingBool: Bool
-    var title: String
-    var image: String
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let aiv = UIActivityIndicatorView(style: .large)
+        aiv.color = .white
+        aiv.startAnimating()
+        return aiv
+    }
     
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(image)
-                .renderingMode(.template)
-                .foregroundColor(.white)
-                .frame(width: 24)
-            HStack {
-                Button(action: {
-                    env.isSelectingSource = true
-                }, label: {
-                    Text(title)
-                    Spacer()
-                })
-                .foregroundColor(Color.gray)
-            }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(3)
-        }
-        .navigationDestination(isPresented: $selectingBool, destination: {
-            SelectLocationView()
-        })
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+        
     }
 }
 
@@ -259,6 +239,8 @@ import Combine
 
 // treat the env as the brain of the application
 class DirectionsEnvironment: ObservableObject {
+    @Published var isCalculatingDirections = false
+    
     @Published var isSelectingSource = false
     @Published var isSelectingDestination = false
     
@@ -271,21 +253,25 @@ class DirectionsEnvironment: ObservableObject {
     
     init() {
         // listen for changes on sourceMapItem, destinationMapItem
-        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { items in
-//            print(items.0 ?? "", items.1 ?? "")
+        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { [weak self] items in
             
             // searching for directions
             let request = MKDirections.Request()
             request.source = items.0
             request.destination = items.1
             let directions = MKDirections(request: request)
+            
+            self?.isCalculatingDirections = true
+            self?.route = nil
+            
             directions.calculate { [weak self] resp, err in
+                self?.isCalculatingDirections = false
+                
                 if let err = err {
                     print("Failed to calculate directions:", err)
                     return
                 }
                 
-//                print(resp?.routes.first ?? "")
                 self?.route = resp?.routes.first
             }
         }
