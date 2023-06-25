@@ -138,53 +138,23 @@ struct SelectLocationView: View {
 struct DirectionsSearchView: View {
     @EnvironmentObject var env: DirectionsEnvironment
     
-//    @State private var isSelectingSource = false
-    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
                 VStack(spacing: 0) {
                     VStack {
-                        HStack(spacing: 16) {
-                            Image("start_location_circles")
-                                .frame(width: 24)
-                            HStack {
-                                Button(action: {
-                                    env.isSelectingSource = true
-                                }, label: {
-                                    Text(env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source") // come from an env object
-                                    Spacer()
-                                })
-                                .foregroundColor(Color.gray)
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(3)
-                        }
-                        .navigationDestination(isPresented: $env.isSelectingSource, destination: {
-                            SelectLocationView()
-                        })
-                        HStack(spacing: 16) {
-                            Image("annotation_icon")
-                                .renderingMode(.template)
-                                .foregroundColor(.white)
-                                .frame(width: 24)
-                            HStack {
-                                Button(action: {
-                                    env.isSelectingDestination = true
-                                }, label: {
-                                    Text(env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination")
-                                    Spacer()
-                                })
-                                .foregroundColor(Color.gray)
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(3)
-                        }
-                        .navigationDestination(isPresented: $env.isSelectingDestination) {
-                            SelectLocationView()
-                        }
+                        SourceMapItemView()
+                        DestinationMapItemView()
+                        /*
+                         * A logical error occurs:
+                         *  when the second row('Destination') input is done,
+                         *  the value gets into the first row('Source').
+                         *
+                         * So, the way of using different objects is better here.
+                         *
+                        MapItemView(selectingBool: $env.isSelectingSource, title: env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source", image: "start_location_circles")
+                        MapItemView(selectingBool: $env.isSelectingDestination, title: env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination", image: "annotation_icon")
+                        */
                     }
                     .padding()
                     .background(Color.blue)
@@ -195,6 +165,92 @@ struct DirectionsSearchView: View {
             }
 //            .navigationBarTitle("DIRECTIONS")
 //            .navigationBarHidden(true)
+        }
+    }
+}
+
+struct MapItemView: View {
+    @EnvironmentObject var env: DirectionsEnvironment
+    
+    @Binding var selectingBool: Bool
+    var title: String
+    var image: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(image)
+                .renderingMode(.template)
+                .foregroundColor(.white)
+                .frame(width: 24)
+            HStack {
+                Button(action: {
+                    env.isSelectingSource = true
+                }, label: {
+                    Text(title)
+                    Spacer()
+                })
+                .foregroundColor(Color.gray)
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(3)
+        }
+        .navigationDestination(isPresented: $selectingBool, destination: {
+            SelectLocationView()
+        })
+    }
+}
+
+struct SourceMapItemView: View {
+    @EnvironmentObject var env: DirectionsEnvironment
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image("start_location_circles")
+                .frame(width: 24)
+            HStack {
+                Button(action: {
+                    env.isSelectingSource = true
+                }, label: {
+                    Text(env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source") // come from an env object
+                    Spacer()
+                })
+                .foregroundColor(Color.gray)
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(3)
+        }
+        .navigationDestination(isPresented: $env.isSelectingSource, destination: {
+            SelectLocationView()
+        })
+    }
+}
+
+struct DestinationMapItemView: View {
+    @EnvironmentObject var env: DirectionsEnvironment
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image("annotation_icon")
+                .renderingMode(.template)
+                .foregroundColor(.white)
+                .frame(width: 24)
+            HStack {
+                Button(action: {
+                    env.isSelectingDestination = true
+                }, label: {
+                    Text(env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination")
+                    Spacer()
+                })
+                .foregroundColor(Color.gray)
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(3)
+        }
+        .navigationDestination(isPresented: $env.isSelectingDestination) {
+            SelectLocationView()
         }
     }
 }
