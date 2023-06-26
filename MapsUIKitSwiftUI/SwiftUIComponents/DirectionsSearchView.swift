@@ -130,6 +130,8 @@ struct SelectLocationView: View {
 struct DirectionsSearchView: View {
     @EnvironmentObject var env: DirectionsEnvironment
     
+    @State var isPresentingRouteModal = false
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -145,6 +147,28 @@ struct DirectionsSearchView: View {
                         .edgesIgnoringSafeArea(.bottom)
                 }
                 
+                VStack {
+                    Spacer()
+                    Button(action: {
+                        self.isPresentingRouteModal.toggle()
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            Text("SHOW ROUTE")
+                                .foregroundColor(.white)
+                                .padding()
+                            Spacer()
+                        }
+                        .background(Color.black)
+                        .cornerRadius(7)
+                        .padding()
+                    })
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0.1, trailing: 0))
+                .sheet(isPresented: $isPresentingRouteModal, content: {
+                    RouteInfoView(route: self.env.route)
+                })
+                
                 if env.isCalculatingDirections {
                     VStack {
                         Spacer()
@@ -159,6 +183,34 @@ struct DirectionsSearchView: View {
                         .cornerRadius(5)
                         
                         Spacer()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RouteInfoView: View {
+    var route: MKRoute?
+    
+    var body: some View {
+        ScrollView {
+            VStack {
+                Text("\(route?.name ?? "")")
+                    .font(.system(size: 16, weight: .bold))
+                    .padding()
+                
+                ForEach(route!.steps, id: \.self) { step in
+                    VStack {
+                        if !step.instructions.isEmpty {
+                            HStack {
+                                Text(step.instructions)
+                                Spacer()
+//                                Text("\(String(format: "%.2f mi", step.distance * 0.00062137))")
+                                Text("\(String(format: "%.2f km", step.distance / 1000))")
+                            }
+                            .padding()
+                        }
                     }
                 }
             }
