@@ -26,8 +26,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = UIHostingController(rootView: mapSearchingView)
         window.makeKeyAndVisible()
         */
+        /*
         let directionsSearchView = DirectionsSearchView().environmentObject(DirectionsEnvironment())
         window.rootViewController = UIHostingController(rootView: directionsSearchView)
+        */
+        window.rootViewController = UIHostingController(rootView: SlideMenuView())
         window.makeKeyAndVisible()
         self.window = window
     }

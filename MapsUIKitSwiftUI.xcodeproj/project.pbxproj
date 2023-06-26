@@ -11,6 +11,7 @@
 		D80324AB2A3DE272004D434E /* SDKAPIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AA2A3DE272004D434E /* SDKAPIKey.swift */; };
 		D80324AD2A3F1816004D434E /* CalloutContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AC2A3F1816004D434E /* CalloutContainer.swift */; };
 		D80324B02A3F583E004D434E /* MapSearchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D80324AF2A3F583E004D434E /* MapSearchingView.swift */; };
+		D8174B102A49E10400832225 /* SlideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8174B0F2A49E10400832225 /* SlideMenuView.swift */; };
 		D84EC20F2A41C53200B2D2C6 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC20E2A41C53200B2D2C6 /* JGProgressHUD */; };
 		D84EC2122A41C54400B2D2C6 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = D84EC2112A41C54400B2D2C6 /* LBTATools */; };
 		D84EC2142A44918600B2D2C6 /* DirectionsSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */; };
@@ -36,6 +37,7 @@
 		D80324AA2A3DE272004D434E /* SDKAPIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SDKAPIKey.swift; path = MapsUIKitSwiftUI/SDKAPIKey.swift; sourceTree = SOURCE_ROOT; };
 		D80324AC2A3F1816004D434E /* CalloutContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutContainer.swift; sourceTree = "<group>"; };
 		D80324AF2A3F583E004D434E /* MapSearchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchingView.swift; sourceTree = "<group>"; };
+		D8174B0F2A49E10400832225 /* SlideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideMenuView.swift; sourceTree = "<group>"; };
 		D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSearchView.swift; sourceTree = "<group>"; };
 		D8856BAC2A2EB8740048E86A /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		D8856BAE2A2EBA320048E86A /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			children = (
 				D80324AF2A3F583E004D434E /* MapSearchingView.swift */,
 				D84EC2132A44918600B2D2C6 /* DirectionsSearchView.swift */,
+				D8174B0F2A49E10400832225 /* SlideMenuView.swift */,
 			);
 			path = SwiftUIComponents;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 			files = (
 				D80324AD2A3F1816004D434E /* CalloutContainer.swift in Sources */,
 				D8856BAF2A2EBA320048E86A /* MKMapItem+Address.swift in Sources */,
+				D8174B102A49E10400832225 /* SlideMenuView.swift in Sources */,
 				D88EB5E12A2B4E5C009CC5E9 /* MainController.swift in Sources */,
 				D80324AB2A3DE272004D434E /* SDKAPIKey.swift in Sources */,
 				D88EB5DD2A2B4E5C009CC5E9 /* AppDelegate.swift in Sources */,
