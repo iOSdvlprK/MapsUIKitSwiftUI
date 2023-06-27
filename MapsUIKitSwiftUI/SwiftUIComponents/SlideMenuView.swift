@@ -52,7 +52,7 @@ struct SlideMenuView: View {
             
             HStack {
                 ZStack {
-                    Color.white
+                    Color(.systemBackground)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
                             self.isMenuShowing.toggle()
@@ -80,11 +80,18 @@ struct SlideMenuView: View {
                                         }
                                         .padding()
                                     })
-                                    .foregroundColor(.black)
+                                    .foregroundColor(self.mapType != item.mapType ? Color(.label) : Color(.systemBackground))
+                                    .background(self.mapType == item.mapType ? Color(.label) : Color(.systemBackground))
                                 }
                             }
                             
                             Spacer()
+                            
+                            Button(action: {
+                                self.isMenuShowing.toggle()
+                            }, label: {
+                                Text("Dismiss")
+                            })
                         }
                         Spacer()
                     }
@@ -95,7 +102,6 @@ struct SlideMenuView: View {
                 Spacer()
             }
             .offset(x: self.isMenuShowing ? 0 : -230)
-//            .animation(.spring())
             .animation(.spring(), value: self.isMenuShowing)
         }
     }
@@ -117,6 +123,12 @@ struct SlideMenuMapView: UIViewRepresentable {
 
 struct SlideMenuView_Previews: PreviewProvider {
     static var previews: some View {
-        SlideMenuView()
+//        VStack {
+//            SlideMenuView().colorScheme(.dark)
+//            SlideMenuView().colorScheme(.light)
+//        }
+        ForEach([ColorScheme.dark, .light], id: \.self) { scheme in
+            SlideMenuView().preferredColorScheme(scheme)
+        }
     }
 }
